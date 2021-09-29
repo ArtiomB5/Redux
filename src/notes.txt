@@ -1,0 +1,105 @@
+1. Установка модулей
+redux
+react-redux - исп. для "связывания" состояния компонент с redux
+
+2. создание store
+const store = createStore(reducer);
+store - объект имеющий ряд методов
+метод getState - метод для получения состояния
+метод dispatch - для изменения состояния
+
+3. создание reducer
+const initialState = {
+  cash: 0
+};
+const reducer = (state = initialState, action: actionType) => {
+  switch (action.type) {
+    case "ADD_CASH":
+      return { ...state, cash: state.cash + action.payload };
+    case "GET_CASH":
+      return { ...state, cash: state.cash - action.payload };
+    default:
+      return state;
+  }
+};
+reducer - функция, принимающая 2 параметра
+параметр 1 - state (состояние)
+параметр 2 - action
+action - объект, обязательно имеющий поле type, 
+по которому будем определять как состояние будет изменяться
+
+Также в action можно передать данные. 
+Для этого используется второе поле - payload. 
+
+reducer содержит логику работы со state.
+Вся логика фокусируется на том какой action был передан в reducer.
+Эта логира реализовывается с помощью switch-case
+
+В зависимости от типа, указанного в action, будет отрабатывать
+тот или иной case.
+
+3. Из модуля react-redux получаем компоненту <Provider>,
+которой оборачиваем наше приложение.
+Параметром компонент Provider принимает store.
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+
+  rootElement
+);
+Компонента Provider будет прокидывать в react компоненты
+наше сосотяние.
+
+4.Что-бы как-то изменить состояние нам нужен dispatch
+Получить его внутри нужной react компоненты мы можем
+с помощью хука useDispatch.
+const dispatch = useDispatch();
+dispatch это функция, парметром принимающая action.
+const addCash = () => {
+    dispatch({ type: "ADD_CASH", payload: 5 });
+  };
+<button onClick={() => addCash()}>Пополнить счет</button>
+
+5. Что-бы получить состояние из redux в нужной
+react компоненте нужно воспольховаться хуком useSelector();
+Параметром этот хук принимает функцию, 
+const cash = useSelector(() => {});
+а эта функция параметром принимает состояние. в теле стрелочной функции
+используем нужный ключ из объекта состояния, в данном случае
+это ключ cash (см. объект initialState)
+const cash = useSelector((state: stateType) => state.cash);
+
+6. Итог по п.1 - п.5
+Есть dispatch, в него передается action,
+содержащий обязательный атрибут type.
+
+То как action будет изменять состояние описано внутри reducer.
+
+reducer - чистая функция, которая всегда принимает состояние и action
+и всегда возвращает новый объект состояния.
+
+Этот reducer передается в store - createStore(reducer),
+а этот store передается в react компоненты по средствам
+компоненты <Provider>
+
+7.Если reducer'ов больше одного то нужно использовать функцию combineReducers
+const rootReducer = combineReducers({
+  cashR: cashReducer,
+  customersR: customersReducer
+});
+И содании стора в функцию createStore передается rootReducer:
+const store = createStore(rootReducer);
+Т.к. в rootReducer использовался подход создания объекта "ключ:значение",
+то для получения состояния в теле функции, являющейся параметром useSelector,
+нужно обратиться сначала к state, потом к ключу reducer из rootReducer,
+а потом к ключу объекта initialState соотвествующего reducer
+const cash = useSelector((state: rootReducerType) => state.cashR.cash);
+
+8.Инструменты разработчика
+-установка расширения в браузер redux devtools
+-установка NPM пакета redux-devtools-extension
+-импорт функции import { composeWithDevTools } from "redux-devtools-extension"; 
+-добавление функции composeWithDevTools в функцию createStore вторым параметром
+export const store = createStore(rootReducer, composeWithDevTools());
+-открытие redux devtools: на странице React приложения нажать F12 / >> / Redux
