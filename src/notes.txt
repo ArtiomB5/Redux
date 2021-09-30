@@ -71,8 +71,8 @@ const cash = useSelector(() => {});
 const cash = useSelector((state: stateType) => state.cash);
 
 6. Итог по п.1 - п.5
-Есть dispatch, в него передается action,
-содержащий обязательный атрибут type.
+Есть dispatch, в него передается action, содержащий обязательный атрибут type.
+
 
 То как action будет изменять состояние описано внутри reducer.
 
@@ -103,3 +103,37 @@ const cash = useSelector((state: rootReducerType) => state.cashR.cash);
 -добавление функции composeWithDevTools в функцию createStore вторым параметром
 export const store = createStore(rootReducer, composeWithDevTools());
 -открытие redux devtools: на странице React приложения нажать F12 / >> / Redux
+
+9.action creator 
+action creator - функция возвращающая action - объект обязательно имеющий свойство type.
+export const addCustomerAC = (payloadvalue: customerType | number) => {
+  return { type: ADD_CUSTOMER, payload: payloadvalue };
+};
+
+10.Redux Thunk
+Redux Thunk - модуль для асинхронной работы с redux
+redux Thunk является middleware, поэтому он подключается с использованием функции applyMidleware()
+export const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);
+redux Thunk является middleware, который позволяет в сторонних функциях использовать dispatch
+
+11.Redux saga 
+Redux saga  - библиотека
+В Redux saga есть 3 основных понятия:
+-workers
+worker - функция, внутри которой выполняется какая-то асинхронная логика
+-watchers
+watcher - функция генератор, внутри которой мы с помощью специальных функций
+указывает тип action'а и worker, который будет отрабатывать, когда выполнится
+action с таким типом, который мы указали в wather'е.
+watcher - функция наблюдатель, которая ждет когда отработает тот или иной action.
+Если к этому action привязак какой-то worker тогда watcher эту функцию вызывает
+при начале дейс твия action, за которым следит watcher.
+-effects
+effects - функции, которые помогают делать запрос, следить за workers, делать dispatch
+и т.д.
+
+!!!Типизация dispatch!!!
+export type dispatchType = typeof store.dispatch;

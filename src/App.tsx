@@ -8,6 +8,7 @@ import {
   addCustomerAC,
   removeCustomerAC
 } from "./store/customersReducer";
+import { fetchCunstomers } from "./asyncAction/customers";
 
 export default function App() {
   const [inputValue, setinputValue] = useState("");
@@ -49,17 +50,20 @@ export default function App() {
           <h2>Баланс: {cash}</h2>
         </div>
         <button onClick={() => addCash(Number(prompt()))}>
-          Пополнить счет +
+          Пополнить счет
         </button>
         <button onClick={() => getCash(Number(prompt()))}>
-          Снять со счета -
+          Снять со счета
         </button>
       </div>
       <hr />
       <div>
         <h2>Клиенты</h2>
         <input type="text" onChange={onChangeHandler} value={inputValue} />
-        <button onClick={addCustomer}>Добавить клиента +</button>
+        <button onClick={addCustomer}>Добавить клиента</button>
+        <button onClick={() => dispatch(fetchCunstomers())}>
+          Добавить всех клиентов из базы
+        </button>
         <div>
           {customers.length === 0 ? (
             <h3>"Клиенты отсутствуют"</h3>

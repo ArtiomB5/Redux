@@ -1,5 +1,5 @@
 {
-  "name": "ulbitv-redux",
+  "name": "ulbitv-redux-thunk",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -11,7 +11,8 @@
     "react-redux": "7.2.5",
     "react-scripts": "4.0.3",
     "redux": "4.1.1",
-    "redux-devtools-extension": "2.13.9"
+    "redux-devtools-extension": "2.13.9",
+    "redux-thunk": "2.3.0"
   },
   "devDependencies": {
     "@types/react": "17.0.20",
