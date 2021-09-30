@@ -1,6 +1,6 @@
 export type customersRAType = {
-  type: "ADD_CUSTOMER" | "REMOVE_CUSTOMER";
-  payload: customerType | number;
+  type: "ADD_CUSTOMER" | "REMOVE_CUSTOMER" | "SET_CUSTOMERS";
+  payload: customerType | number | Array<customerType>;
 };
 
 export type customerType = {
@@ -12,6 +12,7 @@ export type customersStateType = {
   customers: Array<customerType>;
 };
 
+export const SET_CUSTOMERS = "SET_CUSTOMERS";
 export const ADD_CUSTOMER = "ADD_CUSTOMER";
 export const REMOVE_CUSTOMER = "REMOVE_CUSTOMER";
 
@@ -24,6 +25,8 @@ export const customersReducer = (
   action: customersRAType
 ) => {
   switch (action.type) {
+    case SET_CUSTOMERS:
+      return { ...state, customers: [...state.customers, ...action.payload] };
     case ADD_CUSTOMER:
       return { ...state, customers: [...state.customers, action.payload] };
     case REMOVE_CUSTOMER:
@@ -38,10 +41,14 @@ export const customersReducer = (
   }
 };
 
-export const addCustomerAC = (payloadvalue: customerType | number) => {
-  return { type: ADD_CUSTOMER, payload: payloadvalue };
+export const setCustomersAC = (payloadValue: Array<customerType>) => {
+  return { type: SET_CUSTOMERS, payload: payloadValue };
 };
 
-export const removeCustomerAC = (payloadvalue: customerType | number) => {
-  return { type: REMOVE_CUSTOMER, payload: payloadvalue };
+export const addCustomerAC = (payloadValue: customerType | number) => {
+  return { type: ADD_CUSTOMER, payload: payloadValue };
+};
+
+export const removeCustomerAC = (payloadValue: customerType | number) => {
+  return { type: REMOVE_CUSTOMER, payload: payloadValue };
 };
